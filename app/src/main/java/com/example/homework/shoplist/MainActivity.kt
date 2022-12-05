@@ -4,26 +4,30 @@ package com.example.homework.shoplist
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.os.Bundle
+import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.amap.api.location.AMapLocation
+import com.amap.api.location.AMapLocationClient
+import com.amap.api.location.AMapLocationClientOption
+import com.amap.api.location.AMapLocationListener
 import com.example.homework.R
 import com.example.homework.data.Shop
 import com.example.homework.databinding.ActivityMainBinding
 import com.example.homework.login.LoginActivity
 import com.example.homework.shopDetail.ShopDetail_activity
-import android.util.Log
-import android.view.KeyEvent
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.amap.api.location.AMapLocation
-import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
-import com.amap.api.location.AMapLocationListener
 
 
 const val ShopID = "shop id"
@@ -48,6 +52,9 @@ class MainActivity : AppCompatActivity() {
 
         //获取权限
         getPermission()
+
+
+
 
 
         val shopHeaderAdapter = ShopHeaderAdapter()//头部筛选适配器
@@ -102,13 +109,24 @@ class MainActivity : AppCompatActivity() {
         }
         //切换我的
         My.setOnClickListener {
+
             if (check_status()) {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
+
             } else {
+
+
+
+
+
+
                 ShowHomePage.visibility = View.GONE
                 ShowMy.visibility = View.VISIBLE
                 ShowIndent.visibility = View.GONE
+
+
+
 
                 HomePage.setImageResource(R.drawable.home_button1)
                 Indent.setImageResource(R.drawable.indent_button1)
@@ -126,6 +144,23 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         //初始化定位
         locatInit()
+
+        //文字颜色渐变
+        //会员颜色渐变
+        val tv_vip : TextView = findViewById(R.id.tv_vip)
+        var colors1 = intArrayOf(0xffffa000.toInt(), 0xffffff00.toInt())//颜色的数组
+        var mLinearGradient:LinearGradient =LinearGradient(0.toFloat(), 0.toFloat(), 0.toFloat(),
+            tv_vip.getPaint().getTextSize(), colors1, null, Shader.TileMode.CLAMP)
+        tv_vip.getPaint().setShader(mLinearGradient)
+        tv_vip.invalidate()
+
+        //订阅颜色渐变
+        val tv_subscribed_shop : TextView = findViewById(R.id.tv_subscribed_shop)
+        colors1 = intArrayOf(0xffffff00.toInt(), 0xff000088.toInt())//颜色的数组
+        mLinearGradient =LinearGradient(0.toFloat(), 0.toFloat(), 0.toFloat(),
+            tv_subscribed_shop.getPaint().getTextSize(), colors1, null, Shader.TileMode.CLAMP)
+        tv_subscribed_shop.getPaint().setShader(mLinearGradient)
+        tv_subscribed_shop.invalidate()
     }
 
     //两次点击back退出程序
